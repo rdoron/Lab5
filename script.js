@@ -83,7 +83,14 @@ document.querySelector("[type='button']").addEventListener('click', () => {
   var synth = window.speechSynthesis;
   var voiceSelect = document.querySelector('select');
 
+  let top = document.getElementById("text-top").value; 
+  
+  let bottom = document.getElementById("text-bottom").value; 
+
   function populateVoiceList() {
+
+    console.log("populateVoicList has been entered"); 
+
     voices = synth.getVoices();
 
     for(var i = 0; i < voices.length ; i++) {
@@ -106,9 +113,31 @@ document.querySelector("[type='button']").addEventListener('click', () => {
     speechSynthesis.onvoiceschanged = populateVoiceList;
   }
 
-  let top = document.getElementById("text-top").value; 
+  document.querySelector("[type='button']").onclick = function(event) {
+    event.preventDefault();
+    console.log("default has been prevented"); 
   
-  let bottom = document.getElementById("text-bottom").value; 
+    let topSpeak = new SpeechSynthesisUtterance(top);
+    let bottomSpeak = new SpeechSynthesisUtterance(bottom);
+
+    
+    var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+    for(var i = 0; i < voices.length ; i++) {
+      if(voices[i].name === selectedOption) {
+        topSpeak.voice = voices[i];
+        bottomSpeak.voice = voices[i]; 
+      }
+
+    }
+   
+
+    speechSynthesis.speak(topSpeak);
+    speechSynthesis.speak(bottomSpeak);
+  
+    
+  }
+
+
 
   let topSpeak = new SpeechSynthesisUtterance(top);
   let bottomSpeak = new SpeechSynthesisUtterance(bottom);
