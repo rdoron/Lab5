@@ -75,17 +75,47 @@ document.querySelector("[type='reset']").addEventListener('click', () => {
 
 });
 
-document.querySelector("[type='button']").addEventListener('click', () {
+document.querySelector("[type='button']").addEventListener('click', () => {
 
-  document.getElementById()
+  document.getElementById("voice-selection").disabled = false; 
+
+  var voices = [];
+  var synth = window.speechSynthesis;
+  var voiceSelect = document.querySelector('select');
+
+  function populateVoiceList() {
+    voices = synth.getVoices();
+
+    for(var i = 0; i < voices.length ; i++) {
+      var option = document.createElement('option');
+      option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+      if(voices[i].default) {
+        option.textContent += ' -- DEFAULT';
+      }
+
+      option.setAttribute('data-lang', voices[i].lang);
+      option.setAttribute('data-name', voices[i].name);
+      voiceSelect.appendChild(option);
+    }
+  }
+
+  populateVoiceList();
+
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+  }
 
   let top = document.getElementById("text-top").value; 
   
   let bottom = document.getElementById("text-bottom").value; 
 
-  speechSynthesis.speak(top);
-  speechSynthesis.speak(bottom);
-  
+  let topSpeak = new SpeechSynthesisUtterance(top);
+  let bottomSpeak = new SpeechSynthesisUtterance(bottom);
+
+  speechSynthesis.speak(topSpeak);
+  speechSynthesis.speak(bottomSpeak);
+
 
 
 });
