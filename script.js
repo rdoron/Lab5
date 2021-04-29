@@ -1,6 +1,10 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
+var canvas = document.getElementById("user-image");
+const context = canvas.getContext('2d');
+
+img.src='images/sky.jpg';
 
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
@@ -10,6 +14,80 @@ img.addEventListener('load', () => {
   // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
+  
+  console.log("now in load event handler\n");
+  
+   
+  context.clearRect(0,0, canvas.width, canvas.height); 
+
+  document.querySelector("[type='submit']").disabled = false; 
+  document.querySelector("[type='reset']").disabled = true; 
+  document.querySelector("[type='button']").disabled = true; 
+
+  var dict = getDimmensions(canvas.width, canvas.height, img.width, img.height); 
+
+  context.fillStyle = 'black'; 
+  context.fillRect(0, 0, canvas.width, canvas.height); 
+
+  context.drawImage(img, dict['startX'], dict['startY'], dict['width'], dict['height']); 
+
+});
+
+document.getElementById("image-input").addEventListener('change', () => {
+
+  console.log("skdjfaskdjfhasdkjfhaskdjf", document.getElementById("image-input"));
+
+  img.src = URL.createObjectURL(document.getElementById("image-input").files[0]); 
+  console.log(img.src);
+  img.alt = document.getElementById("image-input").files[0]['names'];
+  
+  console.log("img.alt=", img.alt);
+
+});
+
+document.getElementById("generate-meme").addEventListener('submit', function(event) {
+
+  event.preventDefault();
+
+  let top = document.getElementById("text-top").value; 
+  console.log(top);
+  let bottom = document.getElementById("text-bottom").value; 
+  console.log(bottom);
+
+  context.font = "30px Comic Sans MS";
+  context.textAlign = "center"; 
+  context.fillStyle = "white";
+  context.fillText(top, canvas.width/2, 30); 
+  context.fillText(bottom, canvas.width/2, canvas.height - 30); 
+
+  document.querySelector("[type='submit']").disabled = true; 
+  document.querySelector("[type='reset']").disabled = false; 
+  document.querySelector("[type='button']").disabled = false; 
+});
+
+document.querySelector("[type='reset']").addEventListener('click', () => {
+
+  context.clearRect(0,0, canvas.width, canvas.height);
+
+  document.querySelector("[type='submit']").disabled = false; 
+  document.querySelector("[type='reset']").disabled = true; 
+  document.querySelector("[type='button']").disabled = true; 
+
+});
+
+document.querySelector("[type='button']").addEventListener('click', () {
+
+  document.getElementById()
+
+  let top = document.getElementById("text-top").value; 
+  
+  let bottom = document.getElementById("text-bottom").value; 
+
+  speechSynthesis.speak(top);
+  speechSynthesis.speak(bottom);
+  
+
+
 });
 
 /**
