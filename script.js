@@ -87,6 +87,9 @@ document.querySelector("[type='button']").addEventListener('click', () => {
   
   let bottom = document.getElementById("text-bottom").value; 
 
+  var topSpeak = new SpeechSynthesisUtterance(top);
+  var bottomSpeak = new SpeechSynthesisUtterance(bottom);
+
   function populateVoiceList() {
 
     console.log("populateVoicList has been entered"); 
@@ -117,8 +120,7 @@ document.querySelector("[type='button']").addEventListener('click', () => {
     event.preventDefault();
     console.log("default has been prevented"); 
   
-    let topSpeak = new SpeechSynthesisUtterance(top);
-    let bottomSpeak = new SpeechSynthesisUtterance(bottom);
+    
 
     
     var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
@@ -136,15 +138,6 @@ document.querySelector("[type='button']").addEventListener('click', () => {
   
     
   }
-
-
-
-  let topSpeak = new SpeechSynthesisUtterance(top);
-  let bottomSpeak = new SpeechSynthesisUtterance(bottom);
-
-  speechSynthesis.speak(topSpeak);
-  speechSynthesis.speak(bottomSpeak);
-
 
 
 });
