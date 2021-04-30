@@ -6,6 +6,38 @@ const context = canvas.getContext('2d');
 
 img.src='//:0';
 
+document.getElementById("voice-selection").disabled = false; 
+
+var voices = [];
+var synth = window.speechSynthesis;
+var voiceSelect = document.querySelector('select');
+
+function populateVoiceList() {
+
+  console.log("first populate"); 
+
+  voices = synth.getVoices();
+
+  for(var i = 0; i < voices.length ; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    voiceSelect.appendChild(option);
+  }
+}
+
+populateVoiceList();
+
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
@@ -75,6 +107,9 @@ document.querySelector("[type='reset']").addEventListener('click', () => {
 
 });
 
+var topSpeak;
+var bottomSpeak;
+
 document.querySelector("[type='button']").addEventListener('click', () => {
 
   document.getElementById("voice-selection").disabled = false; 
@@ -87,12 +122,12 @@ document.querySelector("[type='button']").addEventListener('click', () => {
   
   let bottom = document.getElementById("text-bottom").value; 
 
-  var topSpeak = new SpeechSynthesisUtterance(top);
-  var bottomSpeak = new SpeechSynthesisUtterance(bottom);
+  topSpeak = new SpeechSynthesisUtterance(top);
+  bottomSpeak = new SpeechSynthesisUtterance(bottom);
 
   function populateVoiceList() {
 
-    console.log("populateVoicList has been entered"); 
+    console.log("populateVoiceList has been entered"); 
 
     voices = synth.getVoices();
 
@@ -132,6 +167,10 @@ document.querySelector("[type='button']").addEventListener('click', () => {
 
     }
    
+    var vol = document.querySelector("[type='range']").value;
+
+    topSpeak.volume = vol / 100;
+    bottomSpeak.volume = vol / 100;
 
     speechSynthesis.speak(topSpeak);
     speechSynthesis.speak(bottomSpeak);
@@ -142,11 +181,28 @@ document.querySelector("[type='button']").addEventListener('click', () => {
 
 });
 
-document.querySelector("[type='range']").addEventListener('input', () => {
+document.getElementById("volume-group").oninput = function() {
+  console.log(document.querySelector("[type='range']").value);
+  var vol = document.querySelector("[type='range']").value;
 
-  
+  if (vol == 0){
+    document.getElementById('volume-group').getElementsByTagName('img')[0].src  = "icons/volume-level-0.svg";
+    document.getElementById('volume-group').getElementsByTagName('img')[0].alt  = "Volume Level 0";
+  }
+  else if (vol > 0 && vol <= 33){
+    document.getElementById('volume-group').getElementsByTagName('img')[0].src  = "icons/volume-level-1.svg";
+    document.getElementById('volume-group').getElementsByTagName('img')[0].alt  = "Volume Level 1";
+  }
+  else if (vol > 33 && vol <= 66){
+    document.getElementById('volume-group').getElementsByTagName('img')[0].src  = "icons/volume-level-2.svg";
+    document.getElementById('volume-group').getElementsByTagName('img')[0].alt  = "Volume Level 2";
+  }
+  else{
+    document.getElementById('volume-group').getElementsByTagName('img')[0].src  = "icons/volume-level-3.svg";
+    document.getElementById('volume-group').getElementsByTagName('img')[0].alt  = "Volume Level 3";
+  }
 
-});
+};
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
