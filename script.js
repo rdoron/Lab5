@@ -14,7 +14,6 @@ var voiceSelect = document.querySelector('select');
 
 function populateVoiceList() {
 
-  console.log("first populate"); 
 
   voices = synth.getVoices();
 
@@ -30,13 +29,10 @@ function populateVoiceList() {
     option.setAttribute('data-name', voices[i].name);
     voiceSelect.appendChild(option);
   }
-}
+};
 
 populateVoiceList();
 
-if (speechSynthesis.onvoiceschanged !== undefined) {
-  speechSynthesis.onvoiceschanged = populateVoiceList;
-}
 
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
@@ -47,7 +43,6 @@ img.addEventListener('load', () => {
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
   
-  console.log("now in load event handler\n");
   
    
   context.clearRect(0,0, canvas.width, canvas.height); 
@@ -67,13 +62,13 @@ img.addEventListener('load', () => {
 
 document.getElementById("image-input").addEventListener('change', () => {
 
-  console.log("skdjfaskdjfhasdkjfhaskdjf", document.getElementById("image-input"));
+  
 
   img.src = URL.createObjectURL(document.getElementById("image-input").files[0]); 
-  console.log(img.src);
+  
   img.alt = document.getElementById("image-input").files[0]['names'];
   
-  console.log("img.alt=", img.alt);
+  
 
 });
 
@@ -82,9 +77,9 @@ document.getElementById("generate-meme").addEventListener('submit', function(eve
   event.preventDefault();
 
   let top = document.getElementById("text-top").value; 
-  console.log(top);
+  
   let bottom = document.getElementById("text-bottom").value; 
-  console.log(bottom);
+  
 
   context.font = "30px Comic Sans MS";
   context.textAlign = "center"; 
@@ -114,10 +109,6 @@ document.querySelector("[type='button']").addEventListener('click', () => {
 
   document.getElementById("voice-selection").disabled = false; 
 
-  var voices = [];
-  var synth = window.speechSynthesis;
-  var voiceSelect = document.querySelector('select');
-
   let top = document.getElementById("text-top").value; 
   
   let bottom = document.getElementById("text-bottom").value; 
@@ -125,64 +116,31 @@ document.querySelector("[type='button']").addEventListener('click', () => {
   topSpeak = new SpeechSynthesisUtterance(top);
   bottomSpeak = new SpeechSynthesisUtterance(bottom);
 
-  function populateVoiceList() {
-
-    console.log("populateVoiceList has been entered"); 
-
-    voices = synth.getVoices();
-
-    for(var i = 0; i < voices.length ; i++) {
-      var option = document.createElement('option');
-      option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
-
-      if(voices[i].default) {
-        option.textContent += ' -- DEFAULT';
-      }
-
-      option.setAttribute('data-lang', voices[i].lang);
-      option.setAttribute('data-name', voices[i].name);
-      voiceSelect.appendChild(option);
-    }
-  }
-
   populateVoiceList();
-
-  if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = populateVoiceList;
-  }
-
-  document.querySelector("[type='button']").onclick = function(event) {
-    event.preventDefault();
-    console.log("default has been prevented"); 
   
-    
+  var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
 
-    
-    var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
-    for(var i = 0; i < voices.length ; i++) {
-      if(voices[i].name === selectedOption) {
-        topSpeak.voice = voices[i];
-        bottomSpeak.voice = voices[i]; 
-      }
-
+  for(var i = 0; i < voices.length ; i++) {
+    if(voices[i].name === selectedOption) {
+      topSpeak.voice = voices[i];
+      bottomSpeak.voice = voices[i]; 
     }
-   
-    var vol = document.querySelector("[type='range']").value;
 
-    topSpeak.volume = vol / 100;
-    bottomSpeak.volume = vol / 100;
-
-    speechSynthesis.speak(topSpeak);
-    speechSynthesis.speak(bottomSpeak);
-  
-    
   }
+   
+  var vol = document.querySelector("[type='range']").value;
 
+  topSpeak.volume = vol / 100;
+  bottomSpeak.volume = vol / 100;
+
+  speechSynthesis.speak(topSpeak);
+  speechSynthesis.speak(bottomSpeak);
+  
 
 });
 
 document.getElementById("volume-group").oninput = function() {
-  console.log(document.querySelector("[type='range']").value);
+  
   var vol = document.querySelector("[type='range']").value;
 
   if (vol == 0){
