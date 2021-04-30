@@ -142,6 +142,12 @@ document.querySelector("[type='button']").addEventListener('click', () => {
 
 });
 
+document.querySelector("[type='range']").addEventListener('input', () => {
+
+  
+
+});
+
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
  * dimensions of the image so that it fits perfectly into the Canvas and maintains aspect ratio
